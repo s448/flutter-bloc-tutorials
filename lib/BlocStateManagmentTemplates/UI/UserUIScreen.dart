@@ -47,6 +47,11 @@ class _MyBlocPageState extends State<MyBlocPage> {
           child: CircularProgressIndicator(),
         );
       }
+      if (state is FailureUserState) {
+        return Center(
+          child: Text(state.errorMessage),
+        );
+      }
       return Center(
         child: ElevatedButton(
           ///

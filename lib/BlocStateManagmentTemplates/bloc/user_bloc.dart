@@ -15,7 +15,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       GetUserEvent event, Emitter<UserState> emit) async {
     emit(LoadingUserState());
     Future.delayed(Duration(seconds: 3));
-    List<User> users = await ApiProvider().getUsers();
-    emit(SuccessUserState(users));
+    try {
+      List<User> users = await ApiProvider().getUsers();
+      emit(SuccessUserState(users));
+    } catch (e) {
+      emit(FailureUserState(e.toString()));
+    }
   }
 }

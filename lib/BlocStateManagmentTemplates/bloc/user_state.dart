@@ -10,3 +10,8 @@ class SuccessUserState extends UserState {
 }
 
 class LoadingUserState extends UserState {}
+
+class FailureUserState extends UserState {
+  String errorMessage;
+  FailureUserState(this.errorMessage);
+}
