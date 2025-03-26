@@ -15,3 +15,9 @@ class FailureUserState extends UserState {
   String errorMessage;
   FailureUserState(this.errorMessage);
 }
+
+class AddUserLoadingState extends UserState {}
+
+class SuccessAddUserState extends UserState {}
+
+class FloatingButtonClicked extends UserState {}

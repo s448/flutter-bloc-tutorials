@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:bloc_lesson/BlocStateManagmentTemplates/UI/add_user.dart'
+    show AddUserPage;
 import 'package:bloc_lesson/BlocStateManagmentTemplates/bloc/user_bloc.dart';
 import 'package:bloc_lesson/BlocStateManagmentTemplates/bloc/user_events.dart';
 import 'package:bloc_lesson/BlocStateManagmentTemplates/bloc/user_state.dart';
@@ -21,21 +25,43 @@ class _MyBlocPageState extends State<MyBlocPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Users List"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider.value(
+                        value: context.read<UserBloc>(),
+                        child: AddUserPage(),
+                      ),
+                    ),
+                  ),
+              icon: Icon(Icons.person_add_outlined))
+        ],
       ),
+
+      // ✅ BlocListener should wrap the body, NOT the floatingActionButton
+      body: BlocListener<UserBloc, UserState>(
+        listener: (context, state) {
+          if (state is FloatingButtonClicked) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Button clicked")),
+            );
+          }
+        },
+        child: buildBloc(),
+      ),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.person_add),
+        onPressed: () => context.read<UserBloc>().add(TriggerFloatingButton()),
+        child: Icon(Icons.add),
       ),
-      body: buildBloc(),
     );
   }
 
-  /**  --------------- Focus Here  ----------------------- **/
+  /// STEP 2: BlocBuilder to handle UI updates based on state
   Widget buildBloc() {
-    ///
-    ///STEP ((2)) => ADD BLOC builder
-    ///
-    return BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
+    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is SuccessUserState) {
         List<User> users = state.users;
         return Center(
@@ -54,19 +80,14 @@ class _MyBlocPageState extends State<MyBlocPage> {
       }
       return Center(
         child: ElevatedButton(
-          ///
-          ///STEP (( 3 )) =>  ADD the EVENT trigger
-          ///
-          onPressed: () => ctx.read<UserBloc>().add(GetUserEvent()),
+          onPressed: () => context.read<UserBloc>().add(GetUserEvent()),
           child: Text("Get user list"),
         ),
       );
     });
   }
-  /** 
-   --------------- Focus Here  -----------------------
-     **/
 
+  /// Build List of Users
   Widget buildUserList(List<User> users) {
     return ListView.builder(
       itemCount: users.length,

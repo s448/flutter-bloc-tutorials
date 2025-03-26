@@ -4,7 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'BlocStateManagmentTemplates/bloc/user_bloc.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    BlocProvider(
+      create: (context) => UserBloc(),
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,13 +19,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      ///
-      ///STEP ((1))  => ADD BLOC provider
-      ///
-      home: BlocProvider(
-        create: (context) => UserBloc(),
-        child: MyBlocPage(),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: MyBlocPage(),
     );
   }
 }
