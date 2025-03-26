@@ -1,14 +1,23 @@
 # bloc_lesson
 
+## Topics Included:
 
-### topics included : 
-## Bloc |- Bloc 
-##      |- Bloc State
-##      |- Bloc Event
+```mermaid
+graph TD;
+    A[Bloc] -->|Manages| B[Bloc State];
+    A -->|Handles| C[Bloc Event];
+    D[Bloc Provider] --> E[Bloc Builder];
+    D --> F[Bloc Listener];
+    D --> G[Bloc Observer];
+    H[Cubit];
+```
 
+## Bloc
+- Bloc State
+- Bloc Event
 
-## Bloc provider
-## Bloc builder
+## Bloc Provider
+## Bloc Builder
 ## Bloc Listener
 ## Bloc Observer
 ## Cubit
