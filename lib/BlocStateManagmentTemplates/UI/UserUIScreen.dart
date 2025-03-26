@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc_lesson/BlocStateManagmentTemplates/UI/add_user.dart'
     show AddUserPage;
 import 'package:bloc_lesson/BlocStateManagmentTemplates/bloc/user_bloc.dart';
@@ -39,8 +37,6 @@ class _MyBlocPageState extends State<MyBlocPage> {
               icon: Icon(Icons.person_add_outlined))
         ],
       ),
-
-      // ✅ BlocListener should wrap the body, NOT the floatingActionButton
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is FloatingButtonClicked) {
@@ -51,7 +47,6 @@ class _MyBlocPageState extends State<MyBlocPage> {
         },
         child: buildBloc(),
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.read<UserBloc>().add(TriggerFloatingButton()),
         child: Icon(Icons.add),
@@ -61,30 +56,32 @@ class _MyBlocPageState extends State<MyBlocPage> {
 
   /// STEP 2: BlocBuilder to handle UI updates based on state
   Widget buildBloc() {
-    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-      if (state is SuccessUserState) {
-        List<User> users = state.users;
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is SuccessUserState) {
+          List<User> users = state.users;
+          return Center(
+            child: buildUserList(users),
+          );
+        }
+        if (state is LoadingUserState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is FailureUserState) {
+          return Center(
+            child: Text(state.errorMessage),
+          );
+        }
         return Center(
-          child: buildUserList(users),
+          child: ElevatedButton(
+            onPressed: () => context.read<UserBloc>().add(GetUserEvent()),
+            child: Text("Get user list"),
+          ),
         );
-      }
-      if (state is LoadingUserState) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-      if (state is FailureUserState) {
-        return Center(
-          child: Text(state.errorMessage),
-        );
-      }
-      return Center(
-        child: ElevatedButton(
-          onPressed: () => context.read<UserBloc>().add(GetUserEvent()),
-          child: Text("Get user list"),
-        ),
-      );
-    });
+      },
+    );
   }
 
   /// Build List of Users
